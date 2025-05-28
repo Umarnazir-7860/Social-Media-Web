@@ -147,6 +147,18 @@ if (!updatedUser) {
   return res.status(404).json({ message: 'User not found' });
 }
 
+// Update the user in Stream
+try {
+  await upsertStreanUser({
+    id: updatedUser._id.toString(),
+    name: updatedUser.fullName,
+    image: updatedUser.profilePic || '', 
+  })
+  console.log(`✅ Stream user updated successfully: ${updatedUser._id}`);
+  
+} catch (streamError) {
+  console.error(' Error updating Stream user:', streamError.message || streamError);
+}
 res.status(200).json({
   success: true,
   message: 'User onboarded successfully',
