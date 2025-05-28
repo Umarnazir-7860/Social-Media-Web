@@ -129,9 +129,35 @@ export async function onboard(req, res) {
    const userId = req.user._id;
    const { fullName,bio,  nativeLanguage, location, learningLanguage } = req.body;
 if (!fullName || !bio || !nativeLanguage || !location || !learningLanguage) {
-     return res.status(400).json({ message: 'All fields are required' });
-   }
+  return res.status(400).json({ 
+    message: 'All fields are required',
+    missingFields: [
+      !fullName && "fullName",
+      !bio && "bio",
+      !nativeLanguage && "nativeLanguage",
+      !learningLanguage && "learningLanguage",
+      !location && "location"
+    ].filter(Boolean)
+  });
+}
+const updatedUser= await User.findByIdAndUpdate(userId,{
+...req.body,
+isOnboarded:true},  {new: true});
+if (!updatedUser) {
+  return res.status(404).json({ message: 'User not found' });
+}
+
+res.status(200).json({
+  success: true,
+  message: 'User onboarded successfully',
+  user: updatedUser
+});
+
  } catch (error) {
-  
+  res.status(500).json({
+    success: false,
+    message: 'Internal server error',
+    error: error.message || 'An unexpected error occurred'
+  });
  }
 }
