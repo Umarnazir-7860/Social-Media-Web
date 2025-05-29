@@ -22,10 +22,15 @@ export const upsertStreanUser = async (userData) => {
     }
 };
 
-export const getStreamToken = (userId) => {
-    try {
-        return serverClient.createToken(userId);
-    } catch (error) {
-        console.error('❌ Error creating Stream token:', error);
-    }
+export const generateStreamToken = (userId) => {
+    //ensure userId is a string
+   try {
+     const userIdString = userId.toString();
+     return serverClient.createToken(userIdString);
+   } catch (error) {
+    console.error('❌ Error generating Stream token:', error);
+    throw error;
+   }
+    
+   
 };
