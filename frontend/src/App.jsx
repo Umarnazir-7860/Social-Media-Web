@@ -1,26 +1,24 @@
-import { Route, Routes } from "react-router"
+import { Navigate, Route, Routes } from "react-router"
 import HomePage from "./pages/HomePage"
-import SignUpPage from "./pages/SignUpPage"
 import LoginPage from "./pages/LoginPage"
 import CallPage from "./pages/CallPage"
 import NotificationPage from "./pages/NotificationPage"
 import OnboardingPage from "./pages/OnboardingPage"
 import ChatPage from "./pages/ChatPage"
-import toast, { Toaster } from "react-hot-toast"
-
 import { useQuery } from "@tanstack/react-query"
-
+import { axiosInstance } from "./lib/axios"
+import SignupPage from "./pages/SignupPage"
+import { Toaster } from "react-hot-toast";
+import PageLoader from "./components/PageLoader"
+import { getAuthUser } from "./mutations/useSignup"
 function App() {
 //tanstack query
-const {data,isLoading,error }=useQuery({queryKey:['todos'], queryFn:async()=>{
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos/1")
-  const data = await response.json()
-  return data
- },
-
+const {data:authData ,isLoading, }=useQuery({queryKey:['authUser'], queryFn:getAuthUser,
+retry:false,
 });
-console.log(data);
+const authUser = authData?.user || null;
 
+if(isLoading) return <PageLoader/>
 
 
 
@@ -50,17 +48,17 @@ console.log(data);
 //   console.log(data);
   return (
     <>
-      <button onClick={()=>toast.success("Hello world")}>Create a toast</button>
-      <Routes>
-         <Route path="/" element={<HomePage/>} />
-         <Route path="/signup" element={<SignUpPage/>} />
-         <Route path="/login" element={<LoginPage/>} />
-         <Route path="/call" element={<CallPage/>} />
-         <Route path="/notification" element={<NotificationPage/>} />
-          <Route path="/chat" element={<ChatPage/>} />
-         <Route path="/onboarding" element={<OnboardingPage/>} />
+          <Toaster />
+        <Routes>
+         <Route path="/" element={authUser? <HomePage/> : <Navigate to="/login" />} />
+         <Route path="/signup" element={!authUser ? <SignupPage/> : <Navigate to="/"/>} />
+         <Route path="/login" element={!authUser ?  <LoginPage/> :<Navigate to="/"/> } />
+         <Route path="/call" element={ authUser? <CallPage/> :<Navigate to="/login" /> } />
+         <Route path="/notification" element={authUser? <NotificationPage/>:<Navigate to="/login" />} />
+          <Route path="/chat" element={authUser?<ChatPage/>:<Navigate to="/login" /> } />
+         <Route path="/onboarding" element={ authUser?<OnboardingPage/>:<Navigate to="/login" /> } />
       </Routes>
-      <Toaster/>
+      
     </>
   )
 }
