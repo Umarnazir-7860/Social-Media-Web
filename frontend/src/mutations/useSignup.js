@@ -21,8 +21,34 @@ export const useSignup = (signupData) => {
     },
   });
 };
+export const login = (loginData) => {
+  const queryClient = useQueryClient();
+ 
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.post("/auth/login", loginData);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Login successful!");
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Login failed");
+    },
+  });
+};
+
+
+
 export const getAuthUser=async()=>{
   const response = await axiosInstance.get("/auth/me")
 
   return response.data
  }
+ export const completeOnboarding=async(formData)=>{
+  const response = await axiosInstance.post("/auth/onboarding",formData)
+
+  return response.data
+ } 

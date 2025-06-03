@@ -31,7 +31,7 @@ if (!strictEmailRegex.test(email)) {
         email,
         password,
         fullName,
-        avatar: randomAvatar
+        profilePic: randomAvatar
   });
  try {
   await upsertStreanUser({
