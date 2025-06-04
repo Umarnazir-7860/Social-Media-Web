@@ -1,15 +1,16 @@
-import React from "react";
+import  { useState } from "react";
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
 import { useSignup } from "../mutations/useSignup"; // ⬅️ custom hook
 
 const SignupPage = () => {
-  const [signupData, setSignupData] = React.useState({
+  const [signupData, setSignupData] = useState({
     fullName: "",
     email: "",
     password: "",
   });
 const { mutate: signupMutation, isPending } = useSignup(signupData);
+
   const handleSignup = (e) => {
     e.preventDefault();
     signupMutation();

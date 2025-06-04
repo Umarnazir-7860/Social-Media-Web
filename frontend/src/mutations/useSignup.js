@@ -3,6 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import { useNavigate } from "react-router"; // ✅ import useNavigate
 import toast from "react-hot-toast";
 
+
 export const useSignup = (signupData) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate(); // ✅ initialize navigate
@@ -21,24 +22,8 @@ export const useSignup = (signupData) => {
     },
   });
 };
-export const login = (loginData) => {
-  const queryClient = useQueryClient();
- 
-  return useMutation({
-    mutationFn: async () => {
-      const response = await axiosInstance.post("/auth/login", loginData);
-      return response.data;
-    },
-    onSuccess: () => {
-      toast.success("Login successful!");
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
 
-    },
-    onError: (error) => {
-      toast.error(error?.response?.data?.message || "Login failed");
-    },
-  });
-};
+
 
 
 

@@ -9,6 +9,7 @@ import SignupPage from "./pages/SignupPage"
 import { Toaster } from "react-hot-toast";
 import PageLoader from "./components/PageLoader"
 import useAuthUser from "./hooks/useAuthUser"
+import Layout from "./components/Layout"
 function App() {
 //tanstack query
  const {isLoading,authUser}= useAuthUser()
@@ -51,7 +52,11 @@ if(isLoading) return <PageLoader/>
   path="/"
   element={
     isAuthenticated
-      ? (isOnboarded ? <HomePage /> : <Navigate to="/onboarding" />)
+      ? (isOnboarded ? 
+      <Layout showSidebar={true}>
+        <HomePage />
+      </Layout>
+       : <Navigate to="/onboarding" />)
       : <Navigate to="/login" />
   }
 />
