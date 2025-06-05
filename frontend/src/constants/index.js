@@ -187,7 +187,7 @@ export const LANGUAGE_TO_FLAG = {
   mandarin: "cn",
   japanese: "jp",
   korean: "kr",
-  hindi: "in",
+  urdu: "pk",
   russian: "ru",
   portuguese: "pt",
   arabic: "sa",
